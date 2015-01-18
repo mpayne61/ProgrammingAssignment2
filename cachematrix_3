@@ -1,0 +1,41 @@
+#Takes the matrix returned by makeCacheMatrix and inverses it
+# If it is already done then cachesolve retrieves the inverse from the cache.
+
+makeCacheMatrix <- function(x = matrix()) {
+  m <- NULL #initialise inverse matrix
+  set <- function(y) {  #set the value of the matrix
+    x <<- y 
+    m <<- NULL
+  }
+  get <- function() x
+  setsolve <- function(solve) m <<- solve
+  getsolve <- function() m
+  list(set = set, get = get,
+       setsolve = setsolve,
+       getsolve = getsolve)
+} 
+
+
+cacheSolve <- function(x, ...) {
+  ## Return a matrix that is the inverse of 'x'
+     m <- x$getsolve()
+    if(!is.null(m)) {
+      message("getting cached data")
+      return(m)
+    } else {
+      data <- x$get()
+      m <- solve(data, ...)
+      x$setsolve(m)
+      return(m)
+    }
+  }  
+
+#Test Here
+
+mcm<-makeCacheMatrix(matrix(runif(25),5,5)) # makes matrix
+cs<-cacheSolve(mcm)
+print(cs)
+cs<-cacheSolve(mcm)
+  
+
+
